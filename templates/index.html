@@ -1,0 +1,23 @@
+{% extends 'base.html'%}
+
+{% block head%} 
+  <title>音樂交流論壇</title>
+{% endblock%}
+{% block body%} 
+  <main role="main">
+    <div class="jumbotron">
+      <div class="col-sm-8 mx-auto">
+        <h1>歡迎來到本站</h1>
+        <p>您可以前往<a href="/posts">貼文串</a>觀看各項貼文</p>
+        {% if session_uid %}
+        <p>或是前往<a href="/posts/add/{{session_uid}}">發起新貼文</a></p>
+        {% else %}
+        <p>或是前往<a href="/login/unlogin=True">發起新貼文</a></p>
+        {% endif %}
+        <p>
+          <a class="btn btn-primary" href="#" role="button">發起新貼文 &raquo;</a>
+        </p>
+      </div>
+    </div>
+  </main>
+{% endblock%}

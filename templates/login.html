@@ -1,0 +1,32 @@
+{% extends 'base.html'%}
+
+{% block head%} 
+  <title>登入</title>
+  <style>
+    .form-group{
+        margin-bottom: 1%;
+    }
+  </style>
+{% endblock%}
+{% block body%} 
+    <div id="alert" d="{{message}}"></div>
+    <form action='/login' method='POST'>
+        <div class="form-group">
+            <label for="email">電子信箱: </label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="輸入電子信箱" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+					onchange="this.setCustomValidity(this.validity.patternMismatch ? '信箱或密碼錯誤' : '');" required />
+        </div>
+        <div class="form-group">
+            <label for="password">密碼: </label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="輸入密碼" pattern="^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$" 
+            minlength="8" maxlength="12" onchange="this.setCustomValidity(this.validity.patternMismatch ? '信箱或密碼錯誤' : '');" />
+        </div>
+        <input class="btn btn-primary" type='submit' value='登入'>
+    </form>
+    {% if message %}
+        <script>
+            var alertMessage= document.getElementById("alert").getAttribute("d");
+            alert(alertMessage);
+        </script>
+    {% endif %}
+{% endblock%}

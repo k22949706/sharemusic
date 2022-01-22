@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+
+{% block head%} 
+  <title>註冊</title>
+  <style>
+    .form-group{
+        margin-bottom: 1%;
+    }
+</style>
+{% endblock%}
+{% block body%} 
+    <form action='/register' method='POST'>
+        <div class="form-group">
+            <label for="username">用戶名稱: </label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="輸入用戶名稱" pattern="^[A-z0-9\u4E00-\u9FA5]*$" minlength="1" maxlength="12"
+            onchange="this.setCustomValidity(this.validity.patternMismatch ? '請輸入1-12個字的用戶名稱' : '');" required/>
+        </div>
+        <div class="form-group">
+            <label for="email">電子信箱: </label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="輸入電子信箱" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+					onchange="this.setCustomValidity(this.validity.patternMismatch ? '請輸入正確的信箱' : '');" required />
+        </div>
+        <div class="form-group">
+            <label for="password">密碼: </label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="輸入密碼" pattern="^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$" 
+            minlength="8" maxlength="12" onchange="this.setCustomValidity(this.validity.patternMismatch ? '請輸入8-12個英數字混合的密碼' : '');" />
+        </div>
+        <input class="btn btn-success" type='submit' value='註冊會員'>
+    </form>
+{% endblock%}

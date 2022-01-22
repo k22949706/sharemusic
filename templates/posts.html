@@ -1,0 +1,86 @@
+{% extends 'base.html'%}
+
+{% block head%} 
+    <title>貼文串</title>
+    <style>
+        .author{
+            float: right;
+            text-decoration: none;
+        }
+        h4{
+            font-weight: bold;
+        }     
+    </style>
+{% endblock%}
+
+{% block body%} 
+    <h1>貼文串</h1>
+    <br>
+    {% for post in posts.items %}
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.date_posted.strftime("%Y/%m/%d %H:%M:%S")}}</p>
+
+        {% if post.music %}
+            <iframe width="1280" height="720" src="https://www.youtube.com/embed/{{post.music.split('.be/')[1]}}" 
+            title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <!-- <iframe width="720" height="480" src="{{post.music}}?mute=1"></iframe> -->
+        {% endif %}
+
+        <p style="white-space:pre-wrap">{{ post.content }}</p>
+
+        {% if session %}
+        <a class="text-decoration-none" href='#collapse{{ post.id }}' data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse{{ post.id }}">回覆</a>
+        {% else %}
+        <a class="text-decoration-none" href='/login/unlogin=True'>回覆</a>
+        {% endif %}
+
+        {% if session_uid == post.uid %}
+            <a class="text-decoration-none" href='/posts/edit/{{session_uid}}/{{post.id}}'>編輯</a>
+            <a class="text-decoration-none" href='/posts/delete/{{session_uid}}/{{post.id}}'>刪除</a>
+        {% else %}
+            <a class="text-decoration-none" href='#' style="visibility:hidden">編輯</a>
+            <a class="text-decoration-none" href='#' style="visibility:hidden">刪除</a>
+        {% endif %}
+
+        {% if post.user.username %}
+            <!-- 利用foreignkey抓到使用者 -->
+            <a class="author">作者: {{ post.user.username }}</a>    
+        {% else %}
+            <a class="author">作者: 匿名 </a>
+        {% endif %}
+        <hr class="mb-3">
+
+        {% for reply in replys %}
+            {% if reply.pid == post.id %}
+                <div class="collapse row row-cols" id="collapse{{ post.id }}">
+                    <p class="col-1 fw-bold text-primary">{{reply.user.username}}</p>
+                    <p class="col-11 text-break">{{reply.content}}</p>
+                </div>
+            {% endif %}
+        {% endfor%}
+
+        <div class="collapse mb-3" id="collapse{{ post.id }}">
+            <form class="row row-cols-2 gx-3" action='/posts/reply/{{session_uid}}/{{post.id}}' method='POST'>
+                <p class="col-1 fw-bold text-primary">{{session_username}}</p>
+                <div class="form-group col-10">
+                    <textarea class="form-control" name="content" id="content" rows="1" required></textarea>
+                </div>
+                <input class="btn btn-success col-1" style="width: 100px;" type='submit' value='送出'>
+            </form>
+        </div>
+    {% endfor%}
+
+    <div style="text-align: center;">
+        {% if posts.has_prev %}
+            <a class="text-decoration-none" href="{{ url_for('posts', pages = posts.prev_num) }}">上一頁</a>
+        {% else %}
+            <a class="text-decoration-none" href="#" style="visibility:hidden;">上一頁</a>
+        {% endif %}
+        <a class="text-decoration-none">｜</a>
+        {% if posts.has_next %}
+            <a class="text-decoration-none" href="{{ url_for('posts', pages = posts.next_num) }}">下一頁</a>
+        {% else %}
+            <a class="text-decoration-none" href="#" style="visibility:hidden;">下一頁</a>
+        {% endif %}
+    </div>
+{% endblock%}
